@@ -1,23 +1,6 @@
-@php
-    // Extract IDs from mainInfo arrays
-    $categoriesScrollIds = $mainInfo['categories_scroll'] ?? [];
-    $featuredSectionIds = $mainInfo['Featured Section'] ?? [];
-
-    // Convert categories to a keyed array by ID for easy lookup
-    $categoriesById = $categories->keyBy('id');
-
-    // Filter categories based on the IDs in mainInfo
-    $categoriesScroll = $categories->filter(function ($category) use ($categoriesScrollIds) {
-        return in_array($category->id, $categoriesScrollIds);
-    });
-
-    $featuredSection = $categories->filter(function ($category) use ($featuredSectionIds) {
-        return in_array($category->id, $featuredSectionIds);
-    });
-@endphp
-
 <!DOCTYPE html>
 <html lang="zxx">
+
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="Ogani Template">
@@ -99,8 +82,8 @@
         </div>
         <div class="humberger__menu__contact">
             <ul>
-                <li><i class="fa fa-envelope"></i> {{$info['email']}}</li>
-                <li>{{$info['news']}}</li>
+                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
+                <li>Free Shipping for all Order of $99</li>
             </ul>
         </div>
     </div>
@@ -114,8 +97,8 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__left">
                             <ul>
-                                <li><i class="fa fa-envelope"></i> {{$info['email']}}</li>
-                                <li>{{$info['news']}}</li>
+                                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
+                                <li>Free Shipping for all Order of $99</li>
                             </ul>
                         </div>
                     </div>
@@ -220,19 +203,19 @@
                                 <i class="fa fa-phone"></i>
                             </div>
                             <div class="hero__search__phone__text">
-                                <h5>{{$info["phone"]}}</h5>
-                                <span>{{$info["support_time"]}}</span>
+                                <h5>+65 11.188.888</h5>
+                                <span>support 24/7 time</span>
                             </div>
                         </div>
                     </div>
-                    <div class="hero__item set-bg" data-setbg="{{ Storage::url($mainInfo['hero_page']['img']) }}">
-                     <div class="hero__text">
-                         <span>FRUIT FRESH</span>
-                         <h2>{{ $mainInfo['hero_page']['txt'] }}</h2>
-                         <a href="#" class="primary-btn">SHOP NOW</a>
-                     </div>
-                 </div>
-                 
+                    <div class="hero__item set-bg" data-setbg="img/hero/banner.jpg">
+                        <div class="hero__text">
+                            <span>FRUIT FRESH</span>
+                            <h2>Vegetable <br />100% Organic</h2>
+                            <p>Free Pickup and Delivery Available</p>
+                            <a href="#" class="primary-btn">SHOP NOW</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -422,22 +405,21 @@
 
     <!-- Banner Begin -->
     <div class="banner">
-     <div class="container">
-         <div class="row">
-             <div class="col-lg-6 col-md-6 col-sm-6">
-                 <div class="banner__pic">
-                     <img src="{{ Storage::url($mainInfo['banner1']['img']) }}" alt="Banner 1">
-                 </div>
-             </div>
-             <div class="col-lg-6 col-md-6 col-sm-6">
-                 <div class="banner__pic">
-                     <img src="{{ Storage::url($mainInfo['banner2']['img']) }}" alt="Banner 2">
-                 </div>
-             </div>
-         </div>
-     </div>
- </div>
- 
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="banner__pic">
+                        <img src="img/banner/banner-1.jpg" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="banner__pic">
+                        <img src="img/banner/banner-2.jpg" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Banner End -->
 
     <!-- Latest Product Section Begin -->

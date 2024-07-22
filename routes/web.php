@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemsController;
+use App\Http\Controllers\MainInfoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RandomPagesController;
 use App\Http\Controllers\SlugController;
@@ -39,15 +40,30 @@ Route::get('/dashboard', function () {
  $jsonFilePath = storage_path('app/random_pages.json');
  $json = File::get($jsonFilePath);
  $links = json_decode($json, true);
+ //mainInfo
+ $path = storage_path('app/mainInfo.json');
 
+ // Check if the file exists
+ if (!File::exists($path)) {
+  return response()->json(['error' => 'File not found'], 404);
+ }
 
- return view("dashboard", ['categories' => Categorie::all(), "last6Items" => $lastItems, "info" => $info, "links" => $links],);
+ // Read the content of the file
+ $jsonContent = File::get($path);
+
+ // Decode the JSON content to an array
+ $mainInfoData = json_decode($jsonContent, true);
+ return view("dashboard", ['categories' => Categorie::all(), "last6Items" => $lastItems, "info" => $info, "links" => $links, "mainInfo" => $mainInfoData]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('test', function () {
  $info = json_decode(Storage::get('info.json'), true);
  $lastItems = Item::orderBy('created_at', 'desc')->take(6)->get();
- return view("normal.app", ['categories' => Categorie::all(), "last6Items" => $lastItems, "info" => $info]);
+ $jsonFilePath = storage_path('app/random_pages.json');
+ $json = File::get($jsonFilePath);
+ $links = json_decode($json, true);
+
+ return view("test", ['categories' => Categorie::all(), "last6Items" => $lastItems, "info" => $info, "links" => $links]);
 });
 
 Route::get("/out", function () {
@@ -108,3 +124,9 @@ Route::post('/save-pages', [RandomPagesController::class, 'saveForm'])->name('pa
 Route::delete('/delete/{title}', [RandomPagesController::class, 'destroy'])->name('page.destroy');
 
 require __DIR__ . '/auth.php';
+
+
+//main info put
+
+Route::get('/Admin/main-info/input', [MainInfoController::class, 'showInputForm'])->name('showInputForm');
+Route::post('/Admin/main-info/save', [MainInfoController::class, 'saveMainInfo'])->name('saveMainInfo');

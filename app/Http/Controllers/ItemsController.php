@@ -47,7 +47,7 @@ class ItemsController extends Controller
   $item->photos = json_encode($photoPaths); // حفظ المسارات بتنسيق JSON
   $item->save();
   // Redirect with success message
-  return redirect()->route('adminDashboard')->with('success', 'Item created successfully.');
+  return redirect()->route('items.index')->with('success', 'Item created successfully.');
  }
  public function ItemsAdmin()
  {

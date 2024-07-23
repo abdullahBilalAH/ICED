@@ -226,9 +226,8 @@
                     </div>
                     <div class="hero__item set-bg" data-setbg="{{ Storage::url($mainInfo['hero_page']['img']) }}">
                      <div class="hero__text">
-                         <span>FRUIT FRESH</span>
                          <h2>{{ $mainInfo['hero_page']['txt'] }}</h2>
-                         <a href="#" class="primary-btn">SHOP NOW</a>
+                         <a href="{{route('getItemsByCategoryId',$mainInfo['hero_page']['category'])}}" class="primary-btn">SHOP NOW</a>
                      </div>
                  </div>
                  
@@ -246,7 +245,7 @@
                  @foreach($categoriesScroll as $category)
                  <div class="col-lg-3">
                   <div class="categories__item set-bg" data-setbg="{{ asset('storage/photos/' . $category->photos) }}">
-                      <h5><a href="#">{{ $category->name }}</a></h5>
+                      <h5><a href="{{route('getItemsByCategoryId',$category->id)}}">{{ $category->name }}</a></h5>
                   </div>
               </div>
               
@@ -260,165 +259,54 @@
 
     <!-- Featured Section Begin -->
     <section class="featured spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title">
-                        <h2>Featured Product</h2>
-                    </div>
-                    <div class="featured__controls">
-                        <ul>
+     <div class="container">
+         <div class="row">
+             <div class="col-lg-12">
+                 <div class="section-title">
+                     <h2>Featured Product</h2>
+                 </div>
+                 <div class="featured__controls">
+                     <ul>
                          <li class="active" data-filter="*">all</li>
                          @foreach($featuredSection as $category)
                          @php
-                           $dataFilter=str_replace("-", ", .",$category->slug)
+                             $dataFilter = str_replace("-", ", .", $category->slug)
                          @endphp
-                            <li class="active" data-filter=".{{$dataFilter}}">{{$category->name}}</li>
-
+                         <li data-filter=".{{ $dataFilter }}">{{ $category->name }}</li>
                          @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="row featured__filter">
-             @foreach($items as $item)
-                 <div class="col-lg-3 col-md-4 col-sm-6 mix {{ $item->slug }}">
-                     <div class="featured__item">
-                         @php
-                             $photosArray = json_decode($item->photos, true);
-                             $firstPhoto = $photosArray[0] ?? null;
-                         @endphp
-                         
-                         @if($firstPhoto)
-                             <div class="featured__item__pic set-bg" data-setbg="{{ asset('storage/' . $firstPhoto) }}">
-                                 <!-- Additional HTML elements here -->
-                             </div>
-                         @else
-                             <div class="featured__item__pic set-bg" data-setbg="{{ asset('storage/default-image.jpg') }}">
-                                 <!-- Additional HTML elements here -->
-                             </div>
-                         @endif
-                         
-                         <ul class="featured__item__pic__hover">
-                             <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                             <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                             <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                         </ul>
-                     </div>
-                     <div class="featured__item__text">
-                         <h6><a href="#">{{ $item->name }}</a></h6>
-                         <h5>${{ $item->price }}</h5>
-                     </div>
+                     </ul>
                  </div>
-             @endforeach
-                <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fastfood">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-2.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fresh-meat">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-3.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood oranges">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-4.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-5.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fastfood">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-6.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-7.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood vegetables">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-8.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
+             </div>
+         </div>
+<div class="row featured__filter">
+    @foreach($items as $item)
+    <div class="col-lg-3 col-md-4 col-sm-6 mix {{ $item->slug }}">
+        <div class="featured__item">
+            @php
+                $photosArray = json_decode($item->photos, true);
+                $firstPhoto = $photosArray[0] ?? null;
+            @endphp
+
+            <div class="featured__item__pic set-bg" data-setbg="{{ $firstPhoto ? asset('storage/' . $firstPhoto) : asset('storage/default-image.jpg') }}">
+                <ul class="featured__item__pic__hover">
+                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                </ul>
+            </div>
+
+            <div class="featured__item__text">
+                <h6><a href="{{route("item.index",$item->id)}}">{{ $item->name }}</a></h6>
+                <h5>${{ $item->price }}</h5>
             </div>
         </div>
-    </section>
+    </div>
+    @endforeach
+</div>
+
+     </div>
+ </section>
+ 
     <!-- Featured Section End -->
 
     <!-- Banner Begin -->
@@ -427,12 +315,14 @@
          <div class="row">
              <div class="col-lg-6 col-md-6 col-sm-6">
                  <div class="banner__pic">
-                     <img src="{{ Storage::url($mainInfo['banner1']['img']) }}" alt="Banner 1">
+                    <a href="{{route('getItemsByCategoryId',$mainInfo['banner1']['category'])}}"> <img src="{{ Storage::url($mainInfo['banner1']['img']) }}" alt="Banner 1"></a>
                  </div>
              </div>
              <div class="col-lg-6 col-md-6 col-sm-6">
                  <div class="banner__pic">
+                  <a href="{{route('getItemsByCategoryId',$mainInfo['banner2']['category'])}}"> 
                      <img src="{{ Storage::url($mainInfo['banner2']['img']) }}" alt="Banner 2">
+                  </a>
                  </div>
              </div>
          </div>
@@ -459,7 +349,7 @@
                               $photos = json_decode($item->photos);
                               $firstPhoto = $photos[0];
                              @endphp
-                             <a href="#" class="latest-product__item">
+                             <a href="{{route("item.index",$item->id)}}" class="latest-product__item">
                                  <div class="latest-product__item__pic">
                                      <img src="{{ asset('storage/' . $firstPhoto) }}" alt="">
                                  </div>
@@ -478,7 +368,7 @@
                           $firstPhoto = $photos[0];
                           
                           @endphp
-                          <a href="#" class="latest-product__item">
+                          <a href="{{route("item.index",$item->id)}}" class="latest-product__item">
                               <div class="latest-product__item__pic">
                                   <img src="{{ asset('storage/' . $firstPhoto) }}" alt="">
                               </div>

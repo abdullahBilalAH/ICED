@@ -87,6 +87,7 @@ Route::post('/Admin/categories/create/store', [CategoriesController::class, 'cre
 
 // User show category
 Route::get('/categoriy/{slug}', [SlugController::class, 'getItemsBySlug'])->name('getItemsBySlug');
+Route::get('/categoriy/f/{id}', [SlugController::class, 'getItemsByCaId'])->name("getItemsByCategoryId");
 
 // Item routes
 Route::get('/item/{id}', [ItemController::class, 'index'])->name("item.index");

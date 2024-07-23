@@ -9,6 +9,9 @@ Items
  <div class="card-header py-3">
      <h6 class="m-0 font-weight-bold text-primary">All Items</h6>
  </div>
+ <div class="container mt-5 d-flex justify-content-center">
+   <a href="{{route('items.create')}}" class="btn btn-primary">Create Item</a>
+ </div>
   <div class="table-responsive">
       <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>

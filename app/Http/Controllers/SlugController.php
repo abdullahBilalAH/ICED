@@ -17,4 +17,13 @@ class SlugController extends Controller
   }
   return view('showCategory', ['items' => $items]);
  }
+ public function getItemsByCaId($id)
+ {
+  $ca = Categorie::findOrFail($id); // Get the category by ID, assuming it's a single ID
+  $slug = $ca->slug;
+  $parts = explode("-", $slug);
+  $items = Item::whereIn('slug', $parts)->get();
+
+  return view('showCategory', ['items' => $items]);
+ }
 }

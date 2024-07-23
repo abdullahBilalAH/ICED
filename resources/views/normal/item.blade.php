@@ -273,7 +273,11 @@
                          foreach ($reviews as $review) {
                           $rating += $review->rating;
                          }
+                         if($review->count()!=0){
                          $rating /= $review->count();
+                        }else{
+                         $rating =0;
+                        }
                          $rating = number_format($rating,2);
                          $nonRating =number_format($rating,1);
                          $nonRating =5-$rating;

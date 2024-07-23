@@ -80,7 +80,9 @@
                <div class="bg-white py-2 collapse-inner rounded">
                    <h6 class="collapse-header">Custom Components:</h6>
                    <a class="collapse-item" href="{{route('userinfo')}}">Info</a>
-                   <a class="collapse-item" href="{{ route('pages.index') }}">pages Controller</a>
+                   <a class="collapse-item" href="{{ route('pages.index') }}">Pages Controller</a>
+                   <a class="collapse-item" href="{{ route('showInputForm') }}">Main Info</a>
+                   <a class="collapse-item" href="{{ route('pages.form') }}">Footer Pages setup</a>
                </div>
            </div>  
              {{-- <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">

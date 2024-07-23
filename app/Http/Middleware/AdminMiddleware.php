@@ -9,19 +9,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
-    public function handle(Request $request, Closure $next)
-    {
-        if (Auth::check() && Auth::user()->user_type == 'admin') {
-            return $next($request);
-        }
+ /**
+  * Handle an incoming request.
+  *
+  * @param  \Illuminate\Http\Request  $request
+  * @param  \Closure  $next
+  * @return mixed
+  */
+ public function handle(Request $request, Closure $next)
+ {
+  if (Auth::check() && Auth::user()->user_type == 'admin') {
+   return $next($request);
+  }
 
-        return response('You are not admin', 403);
-    }
+  return redirect()->route("dashboard");
+ }
 }

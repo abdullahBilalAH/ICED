@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Storage;
 */
 
 Route::get('/', function () {
- return view('welcome');
+ return redirect()->route("adminDashboard");
 });
 
 Route::get('/dashboard', function () {
@@ -53,8 +53,26 @@ Route::get('/dashboard', function () {
  $jsonContent = File::get($path);
 
  // Decode the JSON content to an array
- $mainInfoData = json_decode($jsonContent, true);
- return view("dashboard", ['categories' => Categorie::all(), "last6Items" => $lastItems, "info" => $info, "links" => $links, "mainInfo" => $mainInfoData, 'items' => $items]);
+ $mainInfo = json_decode($jsonContent, true);
+
+ $categories = Categorie::all();
+
+ // Extract IDs from mainInfo arrays
+ $categoriesScrollIds = $mainInfo['categories_scroll'] ?? [];
+ $featuredSectionIds = $mainInfo['Featured Section'] ?? [];
+
+ // Convert categories to a keyed array by ID for easy lookup
+ $categoriesById = $categories->keyBy('id');
+
+ // Filter categories based on the IDs in mainInfo
+ $categoriesScroll = $categories->filter(function ($category) use ($categoriesScrollIds) {
+  return in_array($category->id, $categoriesScrollIds);
+ });
+
+ $featuredSection = $categories->filter(function ($category) use ($featuredSectionIds) {
+  return in_array($category->id, $featuredSectionIds);
+ });
+ return view("dashboard", ['categories' => $categories, "last6Items" => $lastItems, "info" => $info, "links" => $links, "mainInfo" => $mainInfo, 'items' => $items, 'categoriesById' => $categoriesById, "categoriesScroll" => $categoriesScroll, "featuredSection" => $featuredSection, "user" => Auth::user()]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('test', function () {
@@ -64,7 +82,7 @@ Route::get('test', function () {
  $json = File::get($jsonFilePath);
  $links = json_decode($json, true);
 
- return view("test", ['categories' => Categorie::all(), "last6Items" => $lastItems, "info" => $info, "links" => $links]);
+ return view('layouts.main', ['categories' => Categorie::all(), "last6Items" => $lastItems, "info" => $info, "links" => $links]);
 });
 
 Route::get("/out", function () {
@@ -72,34 +90,38 @@ Route::get("/out", function () {
 });
 
 // Admin routes
-Route::get('/Admin', [AdminController::class, 'index'])->middleware('admin')->name("adminDashboard");
-Route::get('/Admin/customers', [UserController::class, 'index'])->name('customerTable');
-Route::get('/Admin/{id}/edit', [UserController::class, 'edit'])->name("user.edit");
-Route::delete('/Admin/{id}', [UserController::class, "destroy"])->name('user.destroy');
+Route::middleware('auth')->group(function () {
 
-// Category routes
-Route::get('/Admin/categories', function () {
- return view("admin.categories", ['categories' => Categorie::all()]);
-})->name('categories.index');
-Route::delete('/Admin/categories/create/destroy/{id}', [CategoriesController::class, 'destroy'])->name("categorie.destroy");
-Route::get('/Admin/categories/create', [CategoriesController::class, 'index'])->name('categorie.index');
-Route::post('/Admin/categories/create/store', [CategoriesController::class, 'create'])->middleware('admin')->name("categories.create");
+ Route::get('/Admin', [AdminController::class, 'index'])->middleware('admin')->name("adminDashboard");
+ Route::get('/Admin/customers', [UserController::class, 'index'])->name('customerTable');
+ Route::get('/Admin/{id}/edit', [UserController::class, 'edit'])->name("user.edit");
+ Route::delete('/Admin/{id}', [UserController::class, "destroy"])->name('user.destroy');
 
-// User show category
-Route::get('/categoriy/{slug}', [SlugController::class, 'getItemsBySlug'])->name('getItemsBySlug');
-Route::get('/categoriy/f/{id}', [SlugController::class, 'getItemsByCaId'])->name("getItemsByCategoryId");
+ // Category routes
+ Route::get('/Admin/categories', function () {
+  return view("admin.categories", ['categories' => Categorie::all()]);
+ })->name('categories.index');
+ Route::delete('/Admin/categories/create/destroy/{id}', [CategoriesController::class, 'destroy'])->name("categorie.destroy");
+ Route::get('/Admin/categories/create', [CategoriesController::class, 'index'])->name('categorie.index');
+ Route::post('/Admin/categories/create/store', [CategoriesController::class, 'create'])->middleware('admin')->name("categories.create");
 
-// Item routes
-Route::get('/item/{id}', [ItemController::class, 'index'])->name("item.index");
-Route::get('/Admin/items/create', [ItemsController::class, 'create'])->name('items.create');
-Route::post('/Admin/items/store', [ItemsController::class, 'store'])->name('items.store');
-Route::get('/Admin/items', [ItemsController::class, 'ItemsAdmin'])->name('items.index');
-Route::get('/Admin/item/{id}', function ($id) {
- return view('admin.showItem', ['item' => Item::find($id)]);
-})->name('admin.item.index');
+ // User show category
+ Route::get('/categoriy/{slug}', [SlugController::class, 'getItemsBySlug'])->name('getItemsBySlug');
+ Route::get('/categoriy/f/{id}', [SlugController::class, 'getItemsByCaId'])->name("getItemsByCategoryId");
 
+ // Item routes
+ Route::get('/item/{id}', [ItemController::class, 'index'])->name("item.index");
+ Route::get('/Admin/items/create', [ItemsController::class, 'create'])->name('items.create');
+ Route::post('/Admin/items/store', [ItemsController::class, 'store'])->name('items.store');
+ Route::get('/Admin/items', [ItemsController::class, 'ItemsAdmin'])->name('items.index');
+ Route::get('/Admin/item/{id}', function ($id) {
+  return view('admin.showItem', ['item' => Item::find($id)]);
+ })->name('admin.item.index');
+});
 
-Route::get('/test1/{id}', [ItemController::class, 'index']);
+Route::get('/test1', function () {
+ return view('layouts.main');
+});
 // Profile routes
 Route::middleware('auth')->group(function () {
  Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

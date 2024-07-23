@@ -15,7 +15,6 @@
         return in_array($category->id, $featuredSectionIds);
     });
 @endphp
-
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
@@ -241,38 +240,22 @@
 
     <!-- Categories Section Begin -->
     <section class="categories">
-        <div class="container">
-            <div class="row">
-                <div class="categories__slider owl-carousel">
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="img/categories/cat-1.jpg">
-                            <h5><a href="#">Fresh Fruit</a></h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="img/categories/cat-2.jpg">
-                            <h5><a href="#">Dried Fruit</a></h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="img/categories/cat-3.jpg">
-                            <h5><a href="#">Vegetables</a></h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="img/categories/cat-4.jpg">
-                            <h5><a href="#">drink fruits</a></h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="img/categories/cat-5.jpg">
-                            <h5><a href="#">drink fruits</a></h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+     <div class="container">
+         <div class="row">
+             <div class="categories__slider owl-carousel">
+                 @foreach($categoriesScroll as $category)
+                 <div class="col-lg-3">
+                  <div class="categories__item set-bg" data-setbg="{{ asset('storage/photos/' . $category->photos) }}">
+                      <h5><a href="#">{{ $category->name }}</a></h5>
+                  </div>
+              </div>
+              
+                 @endforeach
+             </div>
+         </div>
+     </div>
+ </section>
+ 
     <!-- Categories Section End -->
 
     <!-- Featured Section Begin -->
@@ -285,31 +268,49 @@
                     </div>
                     <div class="featured__controls">
                         <ul>
-                            <li class="active" data-filter="*">All</li>
-                            <li data-filter=".oranges">Oranges</li>
-                            <li data-filter=".fresh-meat">Fresh Meat</li>
-                            <li data-filter=".vegetables">Vegetables</li>
-                            <li data-filter=".fastfood">Fastfood</li>
+                         <li class="active" data-filter="*">all</li>
+                         @foreach($featuredSection as $category)
+                         @php
+                           $dataFilter=str_replace("-", ", .",$category->slug)
+                         @endphp
+                            <li class="active" data-filter=".{{$dataFilter}}">{{$category->name}}</li>
+
+                         @endforeach
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="row featured__filter">
-                <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-1.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
+             @foreach($items as $item)
+                 <div class="col-lg-3 col-md-4 col-sm-6 mix {{ $item->slug }}">
+                     <div class="featured__item">
+                         @php
+                             $photosArray = json_decode($item->photos, true);
+                             $firstPhoto = $photosArray[0] ?? null;
+                         @endphp
+                         
+                         @if($firstPhoto)
+                             <div class="featured__item__pic set-bg" data-setbg="{{ asset('storage/' . $firstPhoto) }}">
+                                 <!-- Additional HTML elements here -->
+                             </div>
+                         @else
+                             <div class="featured__item__pic set-bg" data-setbg="{{ asset('storage/default-image.jpg') }}">
+                                 <!-- Additional HTML elements here -->
+                             </div>
+                         @endif
+                         
+                         <ul class="featured__item__pic__hover">
+                             <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                             <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                             <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                         </ul>
+                     </div>
+                     <div class="featured__item__text">
+                         <h6><a href="#">{{ $item->name }}</a></h6>
+                         <h5>${{ $item->price }}</h5>
+                     </div>
+                 </div>
+             @endforeach
                 <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fastfood">
                     <div class="featured__item">
                         <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-2.jpg">

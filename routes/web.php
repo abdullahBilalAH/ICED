@@ -35,6 +35,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
+ $items = Item::all();
  $info = json_decode(Storage::get('info.json'), true);
  $lastItems = Item::orderBy('created_at', 'desc')->take(6)->get();
  $jsonFilePath = storage_path('app/random_pages.json');
@@ -53,7 +54,7 @@ Route::get('/dashboard', function () {
 
  // Decode the JSON content to an array
  $mainInfoData = json_decode($jsonContent, true);
- return view("dashboard", ['categories' => Categorie::all(), "last6Items" => $lastItems, "info" => $info, "links" => $links, "mainInfo" => $mainInfoData]);
+ return view("dashboard", ['categories' => Categorie::all(), "last6Items" => $lastItems, "info" => $info, "links" => $links, "mainInfo" => $mainInfoData, 'items' => $items]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('test', function () {

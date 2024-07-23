@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 
 class MainInfoController extends Controller
 {
+
  public function __construct()
  {
   $this->middleware('admin')->except('error', 'Unauthorized action.');

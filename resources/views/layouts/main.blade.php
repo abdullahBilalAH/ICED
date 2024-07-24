@@ -20,6 +20,22 @@
   <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('css/slicknav.min.css') }}" type="text/css">
   <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
+  <style>
+   .hero__search__phone__icon {
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       width: 50px; /* Adjust the width to fit your design */
+       height: 50px; /* Adjust the height to fit your design */
+       background-color: #f1f1f1; /* Adjust the background color as needed */
+       border-radius: 50%; /* This creates the circle */
+   }
+   
+   .hero__search__phone__icon i {
+       font-size: 20px; /* Adjust the font size as needed */
+       color: #7FAD39; /* Adjust the icon color as needed */
+   }
+</style>
  </head>
 </head>
 
@@ -206,36 +222,17 @@
                  <div class="hero__search">
                      <div class="hero__search__form">
                          <form action="#">
-                             <div class="hero__search__categories">
+                             {{-- <div class="hero__search__categories">
                                  All Categories
-                                 <span class="arrow_carrot-down"></span>
-                             </div>
+                             </div> --}}
                              <input type="text" placeholder="What do you need?">
                              <button type="submit" class="site-btn">SEARCH</button>
                          </form>
                      </div>
-                     <style>
-                      .hero__search__phone__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px; /* Adjust the width to fit your design */
-    height: 50px; /* Adjust the height to fit your design */
-    background-color: #f1f1f1; /* Adjust the background color as needed */
-    border-radius: 50%; /* This creates the circle */
-}
-
-.hero__search__phone__icon i {
-    font-size: 20px; /* Adjust the font size as needed */
-    color: #7FAD39; /* Adjust the icon color as needed */
-}
-
-                      </style>
                      <div class="hero__search__phone">
-                      <div class="hero__search__phone__icon">
-                       <i class="fa fa-phone"></i>
-                   </div>
-                   
+                         <div class="hero__search__phone__icon">
+                             <i class="fa fa-phone"></i>
+                         </div>
                          <div class="hero__search__phone__text">
                              <h5>{{ $info["phone"] }}</h5>
                              <span>{{ $info["support_time"] }}</span>
@@ -247,6 +244,7 @@
          </div>
      </div>
  </section>
+ 
  
     @yield("content")
 
@@ -290,12 +288,12 @@
                          <input type="text" placeholder="Enter your mail">
                          <button type="submit" class="site-btn">Subscribe</button>
                      </form>
-                     <div class="footer__widget__social">
+                     {{-- <div class="footer__widget__social">
                          <a href="#"><i class="fa fa-facebook"></i></a>
                          <a href="#"><i class="fa fa-instagram"></i></a>
                          <a href="#"><i class="fa fa-twitter"></i></a>
                          <a href="#"><i class="fa fa-pinterest"></i></a>
-                     </div>
+                     </div> --}}
                  </div>
              </div>
          </div>

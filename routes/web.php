@@ -87,7 +87,7 @@ Route::get('test', function () {
 
 Route::get("/out", function () {
  Auth::logout();
-});
+})->name("logout");
 
 // Admin routes
 Route::middleware('auth')->group(function () {

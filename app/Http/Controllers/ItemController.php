@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Categorie;
 use App\Models\Item;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Mockery\Undefined;
@@ -69,7 +71,7 @@ class ItemController extends Controller
   });
 
 
-  return view("normal.item", ["item" => $item, "reviews" => $reviews, 'categories' => $categories, "last6Items" => $lastItems, "info" => $info, "links" => $links, "mainInfo" => $mainInfo, 'items' => $items, 'categoriesById' => $categoriesById, "categoriesScroll" => $categoriesScroll, "featuredSection" => $featuredSection]);
+  return view("normal.item", ["item" => $item, "reviews" => $reviews, 'categories' => $categories, "last6Items" => $lastItems, "info" => $info, "links" => $links, "mainInfo" => $mainInfo, 'items' => $items, 'categoriesById' => $categoriesById, "categoriesScroll" => $categoriesScroll, "featuredSection" => $featuredSection, "user" => Auth::user()]);
  }
  public function getReviewsByItemId($itemId)
  {

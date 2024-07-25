@@ -10,6 +10,7 @@
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
   <!-- Css Styles -->
   <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" type="text/css">
@@ -267,10 +268,11 @@
               <div class="footer__widget">
                   <h6>Useful Links</h6>
                   <ul>
-                      <li><a href="{{route("page.view",$links["page1"])}}">{{$links["page1"]}}</a></li>
-                      <li><a href="{{route("page.view",$links["page2"])}}">{{$links["page2"]}}</a></li>                            
-                      <li><a href="{{route("page.view",$links["page3"])}}">{{$links["page3"]}}</a></li>
-                      <li><a href="{{route("page.view",$links["page4"])}}">{{$links["page4"]}}</a></li>                            <li><a href="{{route("page.view",$links["page5"])}}">{{$links["page5"]}}</a></li>                            <li><a href="{{route("page.view",$links["page6"])}}">{{$links["page6"]}}</a></li>
+                   <li><a href="{{route("page.view",$links["page1"])}}">{{$links["page1"]}}</a></li>
+                   <li><a href="{{route("page.view",$links["page2"])}}">{{$links["page2"]}}</a></li>                            
+                   <li><a href="{{route("page.view",$links["page3"])}}">{{$links["page3"]}}</a></li>
+                   <li><a href="{{route("page.view",$links["page4"])}}">{{$links["page4"]}}</a></li>                          <li><a href="{{route("page.view",$links["page5"])}}">{{$links["page5"]}}</a></li>                    
+                   <li><a href="{{route("page.view",$links["page6"])}}">{{$links["page6"]}}</a></li>
                   </ul>
                   <ul>
                    <li><a href="{{route("page.view",$links["page7"])}}">{{$links["page7"]}}</a></li>                            
@@ -301,7 +303,7 @@
                 <div class="col-lg-12">
                     <div class="footer__copyright">
                         <div class="footer__copyright__text"><p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved 
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p></div>
                         <div class="footer__copyright__payment"><img src="img/payment-item.png" alt=""></div>
                     </div>
@@ -322,9 +324,11 @@
 <script src="{{ asset('js/mixitup.min.js') }}"></script>
 <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\ItemController;
@@ -29,6 +30,10 @@ use Illuminate\Support\Facades\Storage;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::fallback(function () {
+ return redirect()->route('dashboard'); // Change 'dashboard' to the name of your dashboard route
+});
 
 Route::get('/', function () {
  return redirect()->route("adminDashboard");
@@ -72,7 +77,7 @@ Route::get('/dashboard', function () {
  $featuredSection = $categories->filter(function ($category) use ($featuredSectionIds) {
   return in_array($category->id, $featuredSectionIds);
  });
- return view("dashboard", ['categories' => $categories, "last6Items" => $lastItems, "info" => $info, "links" => $links, "mainInfo" => $mainInfo, 'items' => $items, 'categoriesById' => $categoriesById, "categoriesScroll" => $categoriesScroll, "featuredSection" => $featuredSection, "user" => Auth::user()]);
+ return view("dashboard", ['categories' => $categories, "last6Items" => $lastItems, "mainInfo" => $mainInfo, 'items' => $items, 'categoriesById' => $categoriesById, "categoriesScroll" => $categoriesScroll, "featuredSection" => $featuredSection]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('test', function () {
@@ -82,7 +87,7 @@ Route::get('test', function () {
  $json = File::get($jsonFilePath);
  $links = json_decode($json, true);
 
- return view('layouts.main', ['categories' => Categorie::all(), "last6Items" => $lastItems, "info" => $info, "links" => $links]);
+ return view('layouts.main', ["last6Items" => $lastItems, "info" => $info, "links" => $links]);
 });
 
 Route::get("/out", function () {
@@ -154,3 +159,21 @@ require __DIR__ . '/auth.php';
 
 Route::get('/Admin/main-info/input', [MainInfoController::class, 'showInputForm'])->name('showInputForm');
 Route::post('/Admin/main-info/save', [MainInfoController::class, 'saveMainInfo'])->name('saveMainInfo');
+
+
+Route::middleware('auth')->group(function () {
+
+ //cart
+ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+ Route::get('/cart/add/{id}/{qa}', [CartController::class, 'addItem'])->name('cart.add');
+ Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
+ // web.php
+ Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+ Route::post('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+ // routes/web.php
+ Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+ Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+
+
+ Route::post('/apply-coupon', [CartController::class, 'applyCoupon'])->name('apply.coupon');
+});

@@ -1,3 +1,9 @@
+@php
+$cost =0;
+foreach ($cart as $item) {
+ $cost += $item["price"]*$item["quantity"];
+}
+@endphp
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
@@ -45,7 +51,6 @@
     <div id="preloder">
         <div class="loader"></div>
     </div>
-
     <!-- Humberger Begin -->
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
@@ -55,7 +60,7 @@
         <div class="humberger__menu__cart">
             <ul>
                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                <li><a href="/1212"><i class="fa fa-shopping-bag"></i> <span>1</span></a></li>
             </ul>
             <div class="header__cart__price">item: <span>$150.00</span></div>
         </div>
@@ -190,10 +195,11 @@
                 <div class="col-lg-3">
                     <div class="header__cart">
                         <ul>
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                            <li><a href="{{route('favorites.index')}}"><i class="fa fa-heart"></i> <span>{{count($favorites)}}</span></a></li>
+                            <li><a href="{{route('cart.index')}}"><i class="fa fa-shopping-bag"></i> <span>{{count($cart)}}</span></a></li>
                         </ul>
-                        <div class="header__cart__price">item: <span>$150.00</span></div>
+
+                        <div class="header__cart__price">item: <span>${{$cost}}</span></div>
                     </div>
                 </div>
             </div>

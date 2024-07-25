@@ -25,10 +25,10 @@ class AppServiceProvider extends ServiceProvider
   */
  public function boot(): void
  {
-  View::composer(['extension.cart_index', 'dashboard'], function ($view) {
+  View::composer(['extension.cart_index', 'dashboard', 'extension.favorite', 'normal.item'], function ($view) {
    // Retrieve data from the database
-   $categories = Categorie::all();
-
+   $cart = session()->get('cart', []);
+   $favorites = session()->get('favorites', []);
    $jsonFilePath = storage_path('app/random_pages.json');
    $json = File::get($jsonFilePath);
    $links = json_decode($json, true);
@@ -40,7 +40,9 @@ class AppServiceProvider extends ServiceProvider
     ->with('links', $links)
     ->with('info', $info)
     ->with('user', Auth::user())
-    ->with('categories', Categorie::all());
+    ->with('categories', Categorie::all())
+    ->with('cart', $cart)
+    ->with('favorites', $favorites);
   });
  }
 }

@@ -1,3 +1,6 @@
+@php
+ $cartItems =array_keys($cart);
+@endphp
 @extends("layouts.main")
 @section("title")
 home page
@@ -67,14 +70,45 @@ home page
                 $photosArray = json_decode($item->photos, true);
                 $firstPhoto = $photosArray[0] ?? null;
             @endphp
+         <div class="featured__item__pic set-bg" data-setbg="{{ $firstPhoto ? asset('storage/' . $firstPhoto) : asset('storage/default-image.jpg') }}">
+         <ul class="featured__item__pic__hover">
+           <li>
+               @if (in_array($item->id, $favorites))
+                   <!-- When the item is already in favorites (green heart) -->
+                   <form action="{{ route('favorites.remove') }}" method="POST" style="display: inline;">
+                       @csrf
+                       <input type="hidden" name="id" value="{{ $item->id }}">
+                       <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer; transition: color 0.3s;">
+                           <i class="fa fa-heart" style="color: #7FAD39; font-size: 24px;"></i>
+                       </button>
+                   </form>
+               @else
+                   <!-- When the item is not in favorites (white heart with green border) -->
+                   <a href="{{ route('favorites.add', ['id' => $item->id]) }}" style="display: inline-block; background: none; border: none; padding: 0; cursor: pointer; transition: color 0.3s;">
+                       <i class="fa fa-heart" style="color: #a7a5a5; border: 2px solid #7FAD39; border-radius: 50%; padding: 5px; font-size: 24px;"></i>
+                   </a>
+               @endif
+           </li>
+           <li>
+               @if (in_array($item->id, $cartItems))
+                   <!-- When the item is already in the cart (green cart) -->
+                   <form action="{{ route('cart.remove') }}" method="POST" style="display: inline;">
+                       @csrf
+                       <input type="hidden" name="id" value="{{ $item->id }}">
+                       <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer; transition: color 0.3s;">
+                           <i class="fa fa-shopping-cart" style="color: #7FAD39; font-size: 24px;"></i>
+                       </button>
+                   </form>
+               @else
+                   <!-- When the item is not in the cart (white cart with green border) -->
+                   <a href="{{ route('cart.addOne', ['id' => $item->id, 'qa' => 1]) }}" style="display: inline-block; background: none; border: none; padding: 0; cursor: pointer; transition: color 0.3s;">
+                       <i class="fa fa-shopping-cart" style="color: #a7a5a5; border: 2px solid #7FAD39; border-radius: 50%; padding: 5px; font-size: 24px;"></i>
+                   </a>
+               @endif
+           </li>
+         </ul>
+         </div>
 
-            <div class="featured__item__pic set-bg" data-setbg="{{ $firstPhoto ? asset('storage/' . $firstPhoto) : asset('storage/default-image.jpg') }}">
-                <ul class="featured__item__pic__hover">
-                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                </ul>
-            </div>
 
             <div class="featured__item__text">
                 <h6><a href="{{route("item.index",$item->id)}}">{{ $item->name }}</a></h6>

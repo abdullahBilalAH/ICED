@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemsController;
@@ -166,6 +167,8 @@ Route::middleware('auth')->group(function () {
  //cart
  Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
  Route::get('/cart/add/{id}/{qa}', [CartController::class, 'addItem'])->name('cart.add');
+ Route::get('/s/cart/add/{id}/{qa}', [CartController::class, 'addItem'])->name('cart.addOne');
+
  Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
  // web.php
  Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -176,4 +179,10 @@ Route::middleware('auth')->group(function () {
 
 
  Route::post('/apply-coupon', [CartController::class, 'applyCoupon'])->name('apply.coupon');
+
+
+ //favorite
+ Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+ Route::get('/favorites/add/{id}', [FavoriteController::class, 'add'])->name('favorites.add');
+ Route::post('/favorites/remove', [FavoriteController::class, 'remove'])->name('favorites.remove');
 });

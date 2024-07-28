@@ -56,6 +56,7 @@ class CartController extends Controller
   return redirect()->back()->with('success', 'Item added to cart!');
  }
 
+
  // Add item with quantity directly via route parameters (if needed)
  public function addItem($id, $quantity)
  {

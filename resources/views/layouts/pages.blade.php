@@ -85,6 +85,18 @@
                    <a class="collapse-item" href="{{ route('pages.form') }}">Footer Pages setup</a>
                </div>
            </div>  
+           <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFourth"
+            aria-expanded="true" aria-controls="collapseThree">
+            <i class="fas fa-cash-register	"></i>
+            <span>orders</span>
+        </a>
+            <div id="collapseFourth" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+             <div class="bg-white py-2 collapse-inner rounded">
+                 <h6 class="collapse-header">Custom Components:</h6>
+                 <a class="collapse-item" href="{{route('userinfo')}}">orders</a>
+             </div>
+         </div> 
              {{-- <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>

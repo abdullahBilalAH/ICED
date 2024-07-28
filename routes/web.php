@@ -3,11 +3,13 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\MainInfoController;
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RandomPagesController;
 use App\Http\Controllers\SlugController;
@@ -186,3 +188,20 @@ Route::middleware('auth')->group(function () {
  Route::get('/favorites/add/{id}', [FavoriteController::class, 'add'])->name('favorites.add');
  Route::post('/favorites/remove', [FavoriteController::class, 'remove'])->name('favorites.remove');
 });
+
+Route::middleware('auth')->group(function () {
+
+ //checkout
+
+ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+
+ Route::post('/checkout/store', [CheckoutController::class, 'store'])->name('checkout.store');
+});
+
+Route::middleware('auth')->group(function () {
+
+ //orders
+ Route::get('/Admin/orders', [OrdersController::class, 'index'])->name('orders.index');
+});
+
+Route::get('/Admin/orders/{id}', [OrdersController::class, 'show'])->name('orders.show');

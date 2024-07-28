@@ -1,4 +1,10 @@
+<style>
+ .text-black {
+     color: black !important;
+ }
+</style>
 @extends("layouts.main")
+
 @section("title")
 Favorites
 @endsection
@@ -50,6 +56,11 @@ Favorites
                               <td class="favorites__price">
                                   ${{ number_format($item['price'], 2) }}
                               </td>
+
+                              <td>
+                               <a href="{{ route('cart.addOne', ['id' => $item['id'], 'qa' => 1]) }}" class="btn btn-success text-black">add to cart</a>
+                           </td>
+                           
                               <td class="favorites__item__close">
                                   <form action="{{ route('favorites.remove') }}" method="POST" style="display: inline;">
                                       @csrf
@@ -59,6 +70,7 @@ Favorites
                                       </button>
                                   </form>
                               </td>
+
                           </tr>
                           @endforeach
                       </tbody>

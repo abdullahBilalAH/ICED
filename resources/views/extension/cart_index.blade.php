@@ -1,13 +1,11 @@
 @php
 $order = [
-  'subTotal' => 0,
-  'items' => [
-    // Add items here if needed
-  ],
-  'discountCodes' => [
-    'code' => session('discount_code', ""), // Retrieve discount code from session or default to an empty string
-    'percent' => session('discount_percent', 0) // Retrieve discount percent from session or default to 0
-  ]
+    'subTotal' => 0,
+    'items' => [],
+    'discountCodes' => [
+        'code' => session('discount_code', ""), // Retrieve discount code from session or default to an empty string
+        'percent' => session('discount_percent', 0) // Retrieve discount percent from session or default to 0
+    ]
 ];
 @endphp
 @extends("layouts.main")
@@ -59,7 +57,7 @@ cart
 
                                   //order builder
                                   $order["subTotal"] += $totalPrice;
-                                  $order["items"][] = $item->id ;
+                                  $order["items"][] = $item->id;
                               @endphp
                               <tr id="cart-item-{{ $item->id }}">
                                   <td class="shoping__cart__item">
@@ -106,6 +104,10 @@ cart
                     </div>
                 </div>
             </div>
+            @php
+                // Save the order in the session
+                session()->put('order', $order);
+            @endphp
             <div class="row">
                 <div class="col-lg-12">
                     <div class="shoping__cart__btns">
@@ -152,7 +154,7 @@ cart
                             <li>Discount <span style="color: #7FAD39;">{{$order["discountCodes"]["percent"]}}%</span></li>
                             <li>Total <span>${{$order["subTotal"]-($order["subTotal"] * ($order["discountCodes"]["percent"])/100.0)}}</span></li>
                         </ul>
-                        <a href="#" class="primary-btn">PROCEED TO CHECKOUT</a>
+                        <a href="{{route('checkout.index')}}" class="primary-btn">PROCEED TO CHECKOUT</a>
                     </div>
                 </div>
             </div>

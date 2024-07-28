@@ -21,4 +21,10 @@ class Item extends Model
  {
   return $this->hasMany(Review::class);
  }
+ public function getFirstPhotoAttribute()
+ {
+  // Ensure the photos attribute is decoded to an array
+  $photos = $this->photos;
+  return $photos[0] ?? null;
+ }
 }

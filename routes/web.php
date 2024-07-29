@@ -10,6 +10,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\MainInfoController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RandomPagesController;
 use App\Http\Controllers\SlugController;
@@ -128,7 +129,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/test1', function () {
- return view('layouts.main');
+ return view('contact');
 });
 // Profile routes
 Route::middleware('auth')->group(function () {
@@ -155,7 +156,6 @@ Route::post('/save-pages', [RandomPagesController::class, 'saveForm'])->name('pa
 
 Route::delete('/delete/{title}', [RandomPagesController::class, 'destroy'])->name('page.destroy');
 
-require __DIR__ . '/auth.php';
 
 
 //main info put
@@ -206,4 +206,12 @@ Route::middleware('auth')->group(function () {
 
 
  Route::get('/Admin/orders/{id}', [OrdersController::class, 'show'])->name('orders.show');
+ Route::post('genrate-orders-pdf/{id}', [PdfController::class, 'generateOrders'])->name('genrate.orders');
+ Route::get('generate-all-orders-zip', [PdfController::class, 'generateAllOrdersZip'])->name('generate.all.orders.zip');
 });
+require __DIR__ . '/auth.php';
+
+
+Route::get('/contact', function () {
+ return view('contact');
+})->name('contact.index');

@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
   */
  public function boot(): void
  {
-  View::composer(['extension.cart_index', 'dashboard', 'extension.favorite', 'normal.item', 'admin.categories', 'showCategory', 'extension.checkout'], function ($view) {
+  View::composer(['extension.cart_index', 'dashboard', 'extension.favorite', 'normal.item', 'admin.categories', 'showCategory', 'extension.checkout', 'contact'], function ($view) {
    // Retrieve data from the database
    $cart = session()->get('cart', []);
    $favorites = session()->get('favorites', []);

@@ -95,7 +95,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Custom Components:</h6>
               <a class="collapse-item" href="{{route('orders.index')}}">orders</a>
-              <a class="collapse-item" href="{{route('orders.index')}}">ordres charts</a>
+              <a class="collapse-item" href="{{route('order.chart')}}">ordres charts</a>
           </div>
       </div> 
           {{-- <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">

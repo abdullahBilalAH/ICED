@@ -1,5 +1,3 @@
-<!-- resources/views/orders/index.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
@@ -8,6 +6,7 @@
     <div class="mb-3">
         <a href="{{ route('orders.index', ['sort_direction' => 'asc']) }}" class="btn btn-primary">Sort by Subtotal Ascending</a>
         <a href="{{ route('orders.index', ['sort_direction' => 'desc']) }}" class="btn btn-primary">Sort by Subtotal Descending</a>
+        <a href="{{ route('generate.all.orders.zip') }}" class="btn btn-success">Download All Orders as ZIP</a>
     </div>
     <table class="table table-bordered">
         <thead>

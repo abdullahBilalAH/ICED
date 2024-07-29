@@ -14,6 +14,7 @@ class OrdersController extends Controller
  {
   $this->middleware('admin')->except('error', 'Unauthorized action.');
  }
+
  public function index(Request $request)
  {
   // Determine the sort direction
@@ -29,11 +30,10 @@ class OrdersController extends Controller
 
  public function show($id)
  {
-  $order = Order::findOrFail($id);
 
+  $order = Order::findOrFail($id);
   // Extract item IDs from the order
   $itemIds = $order->order['items'] ?? [];
-
   // Fetch the items from the Item model
   $items = Item::whereIn('id', $itemIds)->get();
 
@@ -41,8 +41,7 @@ class OrdersController extends Controller
  }
  public function chart()
  {
-  // Fetch the orders data
-  // Fetch the number of orders for each month
+  // Fetch the orders data for the chart
   $orders = DB::table('orders')
    ->select(DB::raw('COUNT(*) as count'), DB::raw('MONTH(created_at) as month'))
    ->groupBy(DB::raw('MONTH(created_at)'))
@@ -56,19 +55,41 @@ class OrdersController extends Controller
    $labels[] = Carbon::createFromDate(null, $i, 1)->format('F'); // Month name
    $data[] = $orders->get($i, 0); // Order count or 0 if no orders
   }
+
+  // Collect and aggregate items orders
   $itemsOrders = [];
-  $ordersData = Order::pluck('order');
-  foreach ($ordersData as $or) {
-   foreach ($or['items'] as $it)
-    array_push($itemsOrders, $it);
+  $ordersData = Order::pluck('cart');
+
+  foreach ($ordersData as $cart) {
+   foreach ($cart as $itemId => $itemData) {
+    $quantity = is_numeric($itemData['quantity']) ? (int) $itemData['quantity'] : 0;
+    if (isset($itemsOrders[$itemId])) {
+     $itemsOrders[$itemId]['quantity'] += $quantity;
+    } else {
+     $itemsOrders[$itemId] = [
+      'id' => $itemId,
+      'name' => $itemData['name'], // Add the item name
+      'quantity' => $quantity
+     ];
+    }
+   }
   }
 
-  // حساب تكرار كل رقم
-  $counts = array_count_values($itemsOrders);
+  // حساب تكرار كل رقم (هنا نقوم بحساب الكميات)
+  $counts = array_column($itemsOrders, 'quantity', 'id');
 
   // ترتيب التكرارات تنازلياً
   arsort($counts);
 
-  return view('orders.chart', compact('labels', 'data'));
+  // إعداد البيانات للمخطط "دونات"
+  $doughnutLabels = [];
+  $doughnutData = [];
+
+  foreach ($counts as $id => $quantity) {
+   $doughnutLabels[] = $itemsOrders[$id]['name']; // استخدام اسم العنصر كـ label
+   $doughnutData[] = $quantity; // كمية العنصر
+  }
+
+  return view('orders.chart', compact('labels', 'data', 'doughnutLabels', 'doughnutData'));
  }
 }

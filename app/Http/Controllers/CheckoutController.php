@@ -27,7 +27,7 @@ class CheckoutController extends Controller
   ];
   // Get the current order from the session
   $order = session()->get('order', []);
-
+  $cart = session()->get('cart', []);
   // Capture form data
   $address = [
    'country' => $request->input('country'),
@@ -40,20 +40,21 @@ class CheckoutController extends Controller
    'email' => $request->input('email'),
    'orderNotes' => $request->input('orderNotes'),
   ];
-
   // Create a new Order instance and assign data
   $orderModel = new Order();
   $orderModel->user = $userInfo;  // Assuming $user is an Eloquent model
   $orderModel->order = $order;
   $orderModel->address = $address;
+  $orderModel->cart = $cart;
 
   // Save the order to the database
   $orderModel->save();
   session()->forget('order');
   session()->forget('cart');  // Assuming 'cart' is the key for cart data
-
+  session()->forget('discount_percent');
+  session()->forget('discount_code');
   // For debugging purposes
-  return redirect()->back()->with('success', 'order send!');
+  return redirect()->route('dashboard')->with('success', 'order send!');
 
   // You can redirect or return a response here
   // return redirect()->route('some.route')->with('success', 'Order placed successfully!');

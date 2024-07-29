@@ -34,7 +34,6 @@ class AppServiceProvider extends ServiceProvider
    $links = json_decode($json, true);
 
    $info = json_decode(Storage::get('info.json'), true);
-
    // Share data with specific views
    $view
     ->with('links', $links)

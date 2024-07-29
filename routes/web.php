@@ -202,6 +202,8 @@ Route::middleware('auth')->group(function () {
 
  //orders
  Route::get('/Admin/orders', [OrdersController::class, 'index'])->name('orders.index');
-});
+ Route::get('/Admin/order-chart', [OrdersController::class, 'chart'])->name('order.chart');
 
-Route::get('/Admin/orders/{id}', [OrdersController::class, 'show'])->name('orders.show');
+
+ Route::get('/Admin/orders/{id}', [OrdersController::class, 'show'])->name('orders.show');
+});

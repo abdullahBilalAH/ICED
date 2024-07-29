@@ -14,7 +14,6 @@ class CartController extends Controller
   $cart = session()->get('cart', []);
 
   $itemIds = array_keys($cart);
-
   // Retrieve the items that match the IDs in the cart
   $items = Item::whereIn('id', $itemIds)->get();
   foreach ($items as $item) {

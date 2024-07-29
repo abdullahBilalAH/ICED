@@ -449,7 +449,33 @@
 <script src="{{ asset('js/mixitup.min.js') }}"></script>
 <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
+<script>
 
+ // Pass data from Laravel to JavaScript
+ const labels = @json($labels);
+ const data = @json($data);
+
+ const chartData = {
+     labels: labels,
+     datasets: [{
+         label: 'Number of Orders',
+         data: data,
+         fill: false,
+         borderColor: 'rgb(75, 192, 192)',
+         tension: 0.1
+     }]
+ };
+
+ const config = {
+     type: 'line',
+     data: chartData,
+ };
+
+ window.onload = function() {
+     const ctx = document.getElementById('myChart').getContext('2d');
+     new Chart(ctx, config);
+ };
+</script>
 
 
 

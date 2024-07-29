@@ -14,6 +14,7 @@ class Order extends Model
   'user',
   'order',
   'address',
+  'cart',
  ];
 
  // Cast the JSON columns to arrays
@@ -21,5 +22,6 @@ class Order extends Model
   'user' => 'array',
   'order' => 'array',
   'address' => 'array',
+  'cart' => 'array',
  ];
 }

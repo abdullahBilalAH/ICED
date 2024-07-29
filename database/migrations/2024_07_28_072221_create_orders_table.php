@@ -13,6 +13,8 @@ return new class extends Migration
    $table->json('user')->nullable();
    $table->json('order')->nullable();
    $table->json('address')->nullable();
+   $table->json('cart')->nullable();
+
    $table->timestamps();
   });
  }

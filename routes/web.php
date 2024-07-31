@@ -21,6 +21,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -44,27 +45,45 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
- $items = Item::all();
- $info = json_decode(Storage::get('info.json'), true);
- $lastItems = Item::orderBy('created_at', 'desc')->take(6)->get();
- $jsonFilePath = storage_path('app/random_pages.json');
- $json = File::get($jsonFilePath);
- $links = json_decode($json, true);
- //mainInfo
- $path = storage_path('app/mainInfo.json');
+ // Define cache keys
+ $itemsKey = 'dashboard_items';
+ $lastItemsKey = 'dashboard_last_items';
+ $mainInfoKey = 'dashboard_main_info';
+ $categoriesKey = 'dashboard_categories';
 
- // Check if the file exists
- if (!File::exists($path)) {
-  return response()->json(['error' => 'File not found'], 404);
- }
+ // Cache duration in minutes
+ $cacheDuration = 60;
 
- // Read the content of the file
- $jsonContent = File::get($path);
+ // Cache items
+ $items = Cache::remember($itemsKey, $cacheDuration, function () {
+  return Item::all();
+ });
 
- // Decode the JSON content to an array
- $mainInfo = json_decode($jsonContent, true);
+ // Cache last 6 items
+ $lastItems = Cache::remember($lastItemsKey, $cacheDuration, function () {
+  return Item::orderBy('created_at', 'desc')->take(6)->get();
+ });
 
- $categories = Categorie::all();
+ // Cache main info
+ $mainInfo = Cache::remember($mainInfoKey, $cacheDuration, function () {
+  $path = storage_path('app/mainInfo.json');
+
+  // Check if the file exists
+  if (!File::exists($path)) {
+   return response()->json(['error' => 'File not found'], 404);
+  }
+
+  // Read the content of the file
+  $jsonContent = File::get($path);
+
+  // Decode the JSON content to an array
+  return json_decode($jsonContent, true);
+ });
+
+ // Cache categories
+ $categories = Cache::remember($categoriesKey, $cacheDuration, function () {
+  return Categorie::all();
+ });
 
  // Extract IDs from mainInfo arrays
  $categoriesScrollIds = $mainInfo['categories_scroll'] ?? [];
@@ -81,7 +100,32 @@ Route::get('/dashboard', function () {
  $featuredSection = $categories->filter(function ($category) use ($featuredSectionIds) {
   return in_array($category->id, $featuredSectionIds);
  });
- return view("dashboard", ['categories' => $categories, "last6Items" => $lastItems, "mainInfo" => $mainInfo, 'items' => $items, 'categoriesById' => $categoriesById, "categoriesScroll" => $categoriesScroll, "featuredSection" => $featuredSection]);
+
+ // Cache photo paths for items
+ foreach ($items as $item) {
+  $photosArray = json_decode($item->photos, true);
+  $firstPhoto = $photosArray[0] ?? null;
+  if ($firstPhoto) {
+   Cache::put("photo_{$item->id}", Storage::url($firstPhoto), $cacheDuration);
+  }
+ }
+
+ // Cache photo paths for categories
+ foreach ($categories as $category) {
+  if ($category->photos) {
+   Cache::put("category_photo_{$category->id}", Storage::url('photos/' . $category->photos), $cacheDuration);
+  }
+ }
+
+ return view("dashboard", [
+  'categories' => $categories,
+  'last6Items' => $lastItems,
+  'mainInfo' => $mainInfo,
+  'items' => $items,
+  'categoriesById' => $categoriesById,
+  'categoriesScroll' => $categoriesScroll,
+  'featuredSection' => $featuredSection
+ ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('test', function () {

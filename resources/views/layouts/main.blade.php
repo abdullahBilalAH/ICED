@@ -47,66 +47,10 @@ foreach ($cart as $item) {
 </head>
 
 <body>
-    <!-- Page Preloder -->
+    {{-- <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
-    </div>
-    <!-- Humberger Begin -->
-    <div class="humberger__menu__overlay"></div>
-    <div class="humberger__menu__wrapper">
-        <div class="humberger__menu__logo">
-            <a href="#"><img src="img/logo.png" alt=""></a>
-        </div>
-        <div class="humberger__menu__cart">
-            <ul>
-                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="/1212"><i class="fa fa-shopping-bag"></i> <span>1</span></a></li>
-            </ul>
-            <div class="header__cart__price">item: <span>$150.00</span></div>
-        </div>
-        <div class="humberger__menu__widget">
-            <div class="header__top__right__language">
-                <img src="img/language.png" alt="">
-                <div>English</div>
-                <span class="arrow_carrot-down"></span>
-                <ul>
-                    <li><a href="#">Spanis</a></li>
-                    <li><a href="#">English</a></li>
-                </ul>
-            </div>
-            <div class="header__top__right__auth">
-                <a href="#"><i class="fa fa-user"></i> Login</a>
-            </div>
-        </div>
-        <nav class="humberger__menu__nav mobile-menu">
-            <ul>
-                <li class="active"><a href="./index.html">Home</a></li>
-                <li><a href="./shop-grid.html">Shop</a></li>
-                <li><a href="#">Pages</a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="./shop-details.html">Shop Details</a></li>
-                        <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                        <li><a href="./checkout.html">Check Out</a></li>
-                    </ul>
-                </li>
-                <li><a href="./contact.html">Contact</a></li>
-            </ul>
-        </nav>
-        <div id="mobile-menu-wrap"></div>
-        <div class="header__top__right__social">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="#"><i class="fa fa-linkedin"></i></a>
-            <a href="#"><i class="fa fa-pinterest-p"></i></a>
-        </div>
-        <div class="humberger__menu__contact">
-            <ul>
-                <li><i class="fa fa-envelope"></i> {{$info['email']}}</li>
-                <li>{{$info['news']}}</li>
-            </ul>
-        </div>
-    </div>
-    <!-- Humberger End -->
+    </div> --}}
 
     <!-- Header Section Begin -->
     <header class="header">
@@ -130,7 +74,6 @@ foreach ($cart as $item) {
                                 <a href="#"><i class="fa fa-pinterest-p"></i></a>
                             </div>
                             <div class="header__top__right__language">
-                                <img src="img/language.png" alt="">
                                 <div>English</div>
                                 <span class="arrow_carrot-down"></span>
                                 <ul>
@@ -175,6 +118,7 @@ foreach ($cart as $item) {
                 <div class="col-lg-6">
                     <nav class="header__menu">
                         <ul>
+                         <li></li>
                             <li class="active"><a href="{{route('dashboard')}}">Home</a></li>
                             <li><a href="{{route('getItemsBySlug',['slug'=>'all'])}}">Shop</a></li>
                             <li><a href="#">Pages</a>
@@ -228,13 +172,11 @@ foreach ($cart as $item) {
              <div class="col-lg-9">
                  <div class="hero__search">
                      <div class="hero__search__form">
-                         <form action="#">
-                             {{-- <div class="hero__search__categories">
-                                 All Categories
-                             </div> --}}
-                             <input type="text" placeholder="What do you need?">
-                             <button type="submit" class="site-btn">SEARCH</button>
-                         </form>
+                      <form action="{{ route('search.results') }}" method="GET">
+                       <input type="text" name="query" placeholder="What do you need?" required>
+                       <button type="submit" class="site-btn">SEARCH</button>
+                   </form>
+                   
                      </div>
                      <div class="hero__search__phone">
                          <div class="hero__search__phone__icon">
@@ -290,12 +232,20 @@ foreach ($cart as $item) {
           </div>
              <div class="col-lg-4 col-md-12">
                  <div class="footer__widget">
-                     <h6>Join Our Newsletter Now</h6>
-                     <p>Get E-mail updates about our latest shop and special offers.</p>
-                     <form action="#">
-                         <input type="text" placeholder="Enter your mail">
-                         <button type="submit" class="site-btn">Subscribe</button>
-                     </form>
+                  <h6>Join Our Newsletter Now</h6>
+                  <p>Get E-mail updates about our latest shop and special offers.</p>
+                  <form action="{{ route('subscribe') }}" method="POST">
+                      @csrf
+                      <input type="email" name="email" placeholder="Enter your mail" required>
+                      <button type="submit" class="site-btn">Subscribe</button>
+                  </form>
+                  
+                  @if(session('success'))
+                      <div class="alert alert-success mt-3">
+                          {{ session('success') }}
+                      </div>
+                  @endif
+                  
                      {{-- <div class="footer__widget__social">
                          <a href="#"><i class="fa fa-facebook"></i></a>
                          <a href="#"><i class="fa fa-instagram"></i></a>
@@ -311,7 +261,7 @@ foreach ($cart as $item) {
                         <div class="footer__copyright__text"><p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
   Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved 
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p></div>
-                        <div class="footer__copyright__payment"><img src="img/payment-item.png" alt=""></div>
+
                     </div>
                 </div>
             </div>
@@ -323,17 +273,16 @@ foreach ($cart as $item) {
     <!-- Js Plugins -->
 <!-- JavaScript Files -->
 <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('js/jquery.nice-select.min.js') }}"></script>
+{{-- <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/jquery.nice-select.min.js') }}"></script> --}}
 <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/jquery.slicknav.js') }}"></script>
 <script src="{{ asset('js/mixitup.min.js') }}"></script>
 <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+{{-- php artisan serve --}}
+<!-- Include compiled JavaScript file -->
+
 @yield('scripts')
 
 </body>

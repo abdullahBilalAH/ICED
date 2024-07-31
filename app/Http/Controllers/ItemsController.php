@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ItemsController extends Controller
 {
@@ -51,6 +52,17 @@ class ItemsController extends Controller
  }
  public function ItemsAdmin()
  {
-  return view("admin.showItems", ["items" => Item::all()]);
+  // Define a unique cache key
+  $cacheKey = 'items_admin_list';
+
+  // Define cache duration (e.g., 60 minutes)
+  $cacheDuration = 60;
+
+  // Attempt to retrieve items from the cache
+  $items = Cache::remember($cacheKey, $cacheDuration, function () {
+   return Item::all();
+  });
+
+  return view('admin.showItems', ['items' => $items]);
  }
 }

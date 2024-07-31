@@ -4,15 +4,18 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemsController;
+use App\Http\Controllers\JsonFavoriteController;
 use App\Http\Controllers\MainInfoController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RandomPagesController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SlugController;
 use App\Http\Controllers\UserController;
 use App\Models\Categorie;
@@ -21,6 +24,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,28 +47,47 @@ Route::get('/', function () {
  return redirect()->route("adminDashboard");
 });
 
+
 Route::get('/dashboard', function () {
- $items = Item::all();
- $info = json_decode(Storage::get('info.json'), true);
- $lastItems = Item::orderBy('created_at', 'desc')->take(6)->get();
- $jsonFilePath = storage_path('app/random_pages.json');
- $json = File::get($jsonFilePath);
- $links = json_decode($json, true);
- //mainInfo
- $path = storage_path('app/mainInfo.json');
+ // Define cache keys
+ $itemsKey = 'dashboard_items';
+ $lastItemsKey = 'dashboard_last_items';
+ $mainInfoKey = 'dashboard_main_info';
+ $categoriesKey = 'dashboard_categories';
 
- // Check if the file exists
- if (!File::exists($path)) {
-  return response()->json(['error' => 'File not found'], 404);
- }
+ // Cache duration in minutes
+ $cacheDuration = 60;
 
- // Read the content of the file
- $jsonContent = File::get($path);
+ // Cache items
+ $items = Cache::remember($itemsKey, $cacheDuration, function () {
+  return Item::all();
+ });
 
- // Decode the JSON content to an array
- $mainInfo = json_decode($jsonContent, true);
+ // Cache last 6 items
+ $lastItems = Cache::remember($lastItemsKey, $cacheDuration, function () {
+  return Item::orderBy('created_at', 'desc')->take(6)->get();
+ });
 
- $categories = Categorie::all();
+ // Cache main info
+ $mainInfo = Cache::remember($mainInfoKey, $cacheDuration, function () {
+  $path = storage_path('app/mainInfo.json');
+
+  // Check if the file exists
+  if (!File::exists($path)) {
+   return response()->json(['error' => 'File not found'], 404);
+  }
+
+  // Read the content of the file
+  $jsonContent = File::get($path);
+
+  // Decode the JSON content to an array
+  return json_decode($jsonContent, true);
+ });
+
+ // Cache categories
+ $categories = Cache::remember($categoriesKey, $cacheDuration, function () {
+  return Categorie::all();
+ });
 
  // Extract IDs from mainInfo arrays
  $categoriesScrollIds = $mainInfo['categories_scroll'] ?? [];
@@ -81,7 +104,32 @@ Route::get('/dashboard', function () {
  $featuredSection = $categories->filter(function ($category) use ($featuredSectionIds) {
   return in_array($category->id, $featuredSectionIds);
  });
- return view("dashboard", ['categories' => $categories, "last6Items" => $lastItems, "mainInfo" => $mainInfo, 'items' => $items, 'categoriesById' => $categoriesById, "categoriesScroll" => $categoriesScroll, "featuredSection" => $featuredSection]);
+
+ // Cache photo paths for items
+ foreach ($items as $item) {
+  $photosArray = json_decode($item->photos, true);
+  $firstPhoto = $photosArray[0] ?? null;
+  if ($firstPhoto) {
+   Cache::put("photo_{$item->id}", Storage::url($firstPhoto), $cacheDuration);
+  }
+ }
+
+ // Cache photo paths for categories
+ foreach ($categories as $category) {
+  if ($category->photos) {
+   Cache::put("category_photo_{$category->id}", Storage::url('photos/' . $category->photos), $cacheDuration);
+  }
+ }
+
+ return view("dashboard", [
+  'categories' => $categories,
+  'last6Items' => $lastItems,
+  'mainInfo' => $mainInfo,
+  'items' => $items,
+  'categoriesById' => $categoriesById,
+  'categoriesScroll' => $categoriesScroll,
+  'featuredSection' => $featuredSection
+ ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('test', function () {
@@ -187,6 +235,9 @@ Route::middleware('auth')->group(function () {
  Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
  Route::get('/favorites/add/{id}', [FavoriteController::class, 'add'])->name('favorites.add');
  Route::post('/favorites/remove', [FavoriteController::class, 'remove'])->name('favorites.remove');
+
+ Route::get('/json/favorites/add/{id}', [JsonFavoriteController::class, 'add'])->name('json.favorites.add');
+ Route::post('/json/favorites/remove', [JsonFavoriteController::class, 'remove'])->name('json.favorites.remove');
 });
 
 Route::middleware('auth')->group(function () {
@@ -208,10 +259,19 @@ Route::middleware('auth')->group(function () {
  Route::get('/Admin/orders/{id}', [OrdersController::class, 'show'])->name('orders.show');
  Route::post('genrate-orders-pdf/{id}', [PdfController::class, 'generateOrders'])->name('genrate.orders');
  Route::get('generate-all-orders-zip', [PdfController::class, 'generateAllOrdersZip'])->name('generate.all.orders.zip');
+
+ //contact
+ Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+ Route::post('/contact/submit', [ContactController::class, 'submit'])->name('contact.submit');
+ Route::get('/Admin/contact_messages', [ContactController::class, 'show'])->name('admin.contact.show')->middleware('auth');
+ Route::post('/subscribe', [ContactController::class, 'subscribe'])->name('subscribe');
+ Route::get('/admin/subscribers', [ContactController::class, 'showSubscribers'])->name('admin.subscribers');
+
+ Route::get('/search', [SearchController::class, 'search'])->name('search.results');
 });
+
+
+Auth::routes([
+ 'verify' => true
+]);
 require __DIR__ . '/auth.php';
-
-
-Route::get('/contact', function () {
- return view('contact');
-})->name('contact.index');

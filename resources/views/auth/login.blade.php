@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="Ogani Template">
     <meta name="keywords" content="Ogani, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
+    <title>Login & Register</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
@@ -20,9 +21,6 @@
     <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/slicknav.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS for Green Theme -->
     <style>
@@ -38,11 +36,14 @@
 
         .card {
             border-color: #28a745; /* Green border for the card */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .nav-link.active {
             background-color: #28a745; /* Green background for active tab */
             color: white !important;
+            border-radius: 5px;
         }
 
         .nav-link {
@@ -61,6 +62,7 @@
         .btn-primary {
             background-color: #28a745; /* Green button background */
             border-color: #28a745; /* Green button border */
+            border-radius: 5px;
         }
 
         .btn-primary:hover {
@@ -75,8 +77,13 @@
         .text-secondary {
             color: #28a745; /* Green color for secondary text */
         }
+
+        .alert {
+            margin-top: 15px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="row justify-content-center">
@@ -98,8 +105,8 @@
 
                         <!-- Pills content -->
                         <div class="tab-content">
+                            <!-- Login Form -->
                             <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
-                                <!-- Login Form -->
                                 <form method="POST" action="{{ route('login') }}">
                                     @csrf
 
@@ -107,14 +114,18 @@
                                     <div class="form-group">
                                         <x-input-label for="email" :value="__('Email')" />
                                         <x-text-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-                                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                                        @error('email')
+                                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <!-- Password -->
                                     <div class="form-group mt-4">
                                         <x-input-label for="password" :value="__('Password')" />
                                         <x-text-input id="password" class="form-control" type="password" name="password" required autocomplete="current-password" />
-                                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                                        @error('password')
+                                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <!-- Remember Me -->
@@ -137,7 +148,9 @@
                                 </form>
                             </div>
 
+                            <!-- Register Form -->
                             <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
+
                                 <!-- Register Form -->
                                 <form method="POST" action="{{ route('register') }}">
                                     @csrf
@@ -146,28 +159,36 @@
                                     <div class="form-group">
                                         <x-input-label for="name" :value="__('Name')" />
                                         <x-text-input id="name" class="form-control" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-                                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                                        @error('name')
+                                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <!-- Email Address -->
                                     <div class="form-group mt-4">
                                         <x-input-label for="email" :value="__('Email')" />
                                         <x-text-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autocomplete="username" />
-                                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                                        @error('email')
+                                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <!-- Password -->
                                     <div class="form-group mt-4">
                                         <x-input-label for="password" :value="__('Password')" />
                                         <x-text-input id="password" class="form-control" type="password" name="password" required autocomplete="new-password" />
-                                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                                        @error('password')
+                                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <!-- Confirm Password -->
                                     <div class="form-group mt-4">
                                         <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
                                         <x-text-input id="password_confirmation" class="form-control" type="password" name="password_confirmation" required autocomplete="new-password" />
-                                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                                        @error('password_confirmation')
+                                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <div class="form-group mt-4 d-flex justify-content-between">
@@ -198,8 +219,6 @@
     <script src="{{ asset('js/mixitup.min.js') }}"></script>
     <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
+
 </html>

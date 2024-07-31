@@ -269,9 +269,4 @@ Route::middleware('auth')->group(function () {
 
  Route::get('/search', [SearchController::class, 'search'])->name('search.results');
 });
-
-
-Auth::routes([
- 'verify' => true
-]);
 require __DIR__ . '/auth.php';
